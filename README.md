@@ -8,7 +8,6 @@ The files in this repository were used to configure the network depicted below.
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the YML file may be used to install only certain pieces of it, such as Filebeat.
 
   - [ELK install](https://github.com/oliversbow/Cybersecurity-Bootcamp-Project-1/blob/master/Ansible/Install-ELK.yml)
-  - [Metricbeat playbook](https://github.com/oliversbow/Cybersecurity-Bootcamp-Project-1/blob/master/Ansible/Metricbeat-playbook.yml)
   - [Filebeat playbook](https://github.com/oliversbow/Cybersecurity-Bootcamp-Project-1/blob/master/Ansible/Filebeat-playbook.yml)
 
 This document contains the following details:
@@ -20,8 +19,6 @@ This document contains the following details:
 - How to Use the Ansible Build
 
 
-### Description of the Topology
-
 The main purpose of this network is to expose a load-balanced and monitored instance of DVWA, the D*mn Vulnerable Web Application.
 
 Load balancing ensures that the application will be highly available, in addition to restricting access to the network.
@@ -29,10 +26,8 @@ Load balancers help ensure environment availability through distribution of inco
 and provide an additional layer between the outside and internal assets.
 
 Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the event logs and system metrics.
-- Filbeats watch for log directories or specific log files. 
-- Metricbeat helps you monitor your servers by collecting metrics from the system and services running on the server.
 
-The configuration details of each machine may be found below.
+
 
 
 | Name     | Function | IP Address | Operating System |
@@ -119,7 +114,7 @@ The playbook implements the following tasks:
           - 9200:9200
           - 5044:5044
 ```
-The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
+screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
 ![](https://github.com/oliversbow/Cybersecurity-Bootcamp-Project-1/blob/master/Images/docker_ps_output.PNG)
 
@@ -130,11 +125,10 @@ This ELK server is configured to monitor the following machines:
 
 We have installed the following Beats on these machines:
 - FileBeat
-- Metric Beat
 
 These Beats allow us to collect the following information from each machine:
-- Filebeat is a log data shipper for local files. Installed as an agent on your servers, Filebeat monitors the log directories or specific log files, tails the files, and forwards them either to Elasticsearch or Logstash for indexing. An examle of such are the logs produced from the MySQL database supporting our application. 
-- Metricbeat collects metrics and statistics on the system. An example of such is cpu usage, which can be used to monitor the system health.
+- Filebeat is a log data shipper for local files. Installed as an agent on your servers, Filebeat monitors the log directories or specific log files, tails the files, and 
+
 
 ### Using the Playbook
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
@@ -190,35 +184,3 @@ filebeats
 
 ```
 
-metricbeats
-```bash
-- name: Install metric beat
-  hosts: webservers
-  become: true
-  tasks:
-    # Use command module
-  - name: Download metricbeat
-    command: curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.4.0-amd64.deb
-
-    # Use command module
-  - name: install metricbeat
-    command: dpkg -i metricbeat-7.4.0-amd64.deb
-
-    # Use copy module
-  - name: drop in metricbeat config
-    copy:
-      src: /etc/ansible/files/metricbeat-config.yml
-      dest: /etc/metricbeat/metricbeat.yml
-
-    # Use command module
-  - name: enable and configure docker module for metric beat
-    command: metricbeat modules enable docker
-
-    # Use command module
-  - name: setup metric beat
-    command: metricbeat setup
-
-    # Use command module
-  - name: start metric beat
-    command: service metricbeat start
-```
